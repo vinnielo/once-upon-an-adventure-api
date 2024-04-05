@@ -3,11 +3,12 @@ const { User } = require("../models");
 
 // Defining methods for the dataController
 module.exports = {
-  findAll: function (req, res) {
+  findAll (req, res) {
     User.find(req.query)
       .then((dbUser) => res.json(dbUser))
       .catch((err) => res.status(422).json(err));
   },
+
   async create(req, res) {
     const user = await User.create(req.body);
 
@@ -17,34 +18,21 @@ module.exports = {
     
     res.json(user);
   },
-  async findUser(req, res) {
-    const userData = await User.find({ email: req.body.email }).populate(
-      "sprite"
-    );
+  async login(req, res) {
+    const user = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] })
 
-    if (!userData) {
+    if (!user) {
       return res.status(400).json({ message: "Can't find this user" });
     }
-    const correctPw = await userData.isCorrectPassword(req.body.password);
+    
+    const correctPw = await user.isCorrectPassword(req.body.password);
 
     if (!correctPw) {
       return res.status(400).json({ message: "Wrong password!" });
     }
 
-    res.json(userData);
+    res.json(user);
 
-    // .then((dbUser) => {
-    //   const ah = bcrypt
-    //     .compare(req.body.password, dbUser[0].password)
-    //     .then((result) => {
-    //       if (result === true) {
-    //         res.json(dbUser);
-    //       } else {
-    //         res.status(404).send({ error: "boo:(" });
-    //       }
-    //     });
-    // })
-    // .catch((err) => res.status(422).json(err));
   },
   findUserAvatar: function (req, res) {
     User.find({ _id: req.params.id })
