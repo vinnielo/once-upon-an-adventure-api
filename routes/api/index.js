@@ -6,7 +6,6 @@ const storyRoutes = require("./storyRoute");
 const inventoryRoutes = require("./Inventory");
 
 // user routes
-// router.use("/signup", userRoutes);
 router.use("/sprite", spriteRoutes);
 router.use("/story", storyRoutes);
 router.use("/user", userRoutes);

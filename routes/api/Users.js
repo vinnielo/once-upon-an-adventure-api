@@ -8,7 +8,7 @@ const {
   login,
 } = require("../../controllers/dataController");
 
-// Matches with "/api/signup"
+
 router.route("/").get(findAll).post(create);
 
 router.route("/login").post(login);
