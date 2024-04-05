@@ -25,7 +25,7 @@ module.exports = {
     if (!userData) {
       return res.status(400).json({ message: "Can't find this user" });
     }
-    const correctPw = await userData.isCorrectPassword(body.password);
+    const correctPw = await userData.isCorrectPassword(req.body.password);
 
     if (!correctPw) {
       return res.status(400).json({ message: "Wrong password!" });
