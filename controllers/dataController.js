@@ -38,7 +38,7 @@ module.exports = {
   async findUser ({ user = null, params }, res) {
     const foundUser = await User.findOne({
       $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
-    }).populate('sprite').populate("story").populate("inventory");
+    }).populate('sprite').populate("story");
 
     if (!foundUser) {
       return res.status(400).json({ message: 'Cannot find a user with this id!' });
