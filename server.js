@@ -29,9 +29,10 @@
 //   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 // });
 
-const express = require('express');
-const db = require('./config/connection');
-const routes = require('./routes');
+const express = require("express");
+const db = require("./config/connection");
+const routes = require("./routes");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -42,9 +43,8 @@ app.use(routes);
 
 app.use(cors());
 
-db.once('open', () => {
+db.once("open", () => {
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
   });
 });
-
