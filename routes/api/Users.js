@@ -5,24 +5,18 @@ const {
   findUserAvatar,
   findUserStory,
   findUserInventory,
-  findUser
+  login,
 } = require("../../controllers/dataController");
 
 // Matches with "/api/signup"
-router.route("/")
-  .get(findAll)
-  .post(create);
- 
-  router.route("/login")
-  .post(findUser)
+router.route("/").get(findAll).post(create);
 
-  router.route("/avatar/:id?")
-  .get(findUserAvatar);
+router.route("/login").post(login);
 
-  router.route("/avatar/story/:id?")
-  .get(findUserStory);
+router.route("/avatar/:id?").get(findUserAvatar);
 
-  router.route("/inventory/:id?")
-  .get(findUserInventory)
+router.route("/avatar/story/:id?").get(findUserStory);
 
-  module.exports = router;
+router.route("/inventory/:id?").get(findUserInventory);
+
+module.exports = router;
