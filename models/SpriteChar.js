@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema, model } = require('mongoose');
 
 const SpriteSchema = new Schema({
     sprite: {type: String},
@@ -15,6 +14,6 @@ const SpriteSchema = new Schema({
     money: {type: Number, default: 0}
 
 });
-const Sprite = mongoose.model("Sprite", SpriteSchema);
+const Sprite = model("Sprite", SpriteSchema);
 
 module.exports = Sprite;

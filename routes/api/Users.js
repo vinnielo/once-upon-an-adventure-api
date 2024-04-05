@@ -1,21 +1,28 @@
 const router = require("express").Router();
-const dataController = require("../../controllers/dataController");
+const {
+  findAll,
+  create,
+  findUserAvatar,
+  findUserStory,
+  findUserInventory,
+  findUser
+} = require("../../controllers/dataController");
 
 // Matches with "/api/signup"
 router.route("/")
-  .get(dataController.findAll)
-  .post(dataController.create);
+  .get(findAll)
+  .post(create);
  
   router.route("/login")
-  .post(dataController.findUser)
+  .post(findUser)
 
   router.route("/avatar/:id?")
-  .get(dataController.findUserAvatar);
+  .get(findUserAvatar);
 
   router.route("/avatar/story/:id?")
-  .get(dataController.findUserStory);
+  .get(findUserStory);
 
   router.route("/inventory/:id?")
-  .get(dataController.findUserInventory)
+  .get(findUserInventory)
 
   module.exports = router;

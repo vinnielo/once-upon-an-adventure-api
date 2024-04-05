@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const db = require("../models");
+require('dotenv').config()
 
-mongoose.connect('mongodb+srv://vinnielo001:password24@cluster0.ol3bz.mongodb.net/onceupon');
+mongoose.connect(process.env.ATLAS);
 
 const UserSeed = [
   {
