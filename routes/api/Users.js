@@ -2,7 +2,7 @@ const router = require("express").Router();
 const {
   findAll,
   create,
-  findUserAvatar,
+  findUser,
   findUserStory,
   findUserInventory,
   login,
@@ -13,7 +13,7 @@ router.route("/").get(findAll).post(create);
 
 router.route("/login").post(login);
 
-router.route("/avatar/:id?").get(findUserAvatar);
+router.route("/:id").get(findUser);
 
 router.route("/avatar/story/:id?").get(findUserStory);
 

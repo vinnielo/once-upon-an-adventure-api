@@ -24,7 +24,7 @@ module.exports = {
     if (!user) {
       return res.status(400).json({ message: "Can't find this user" });
     }
-    
+
 
     const correctPw = await user.isCorrectPassword(req.body.password);
 
@@ -35,11 +35,16 @@ module.exports = {
     res.json(user);
 
   },
-  findUserAvatar: function (req, res) {
-    User.find({ _id: req.params.id })
-      .populate("sprite")
-      .then((dbUser) => res.json(dbUser))
-      .catch((err) => res.status(521).json(err));
+  async findUser ({ user = null, params }, res) {
+    const foundUser = await User.findOne({
+      $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
+    }).populate('sprite').populate("story").populate("inventory");
+
+    if (!foundUser) {
+      return res.status(400).json({ message: 'Cannot find a user with this id!' });
+    }
+
+    res.json(foundUser);
   },
   findUserStory: function (req, res) {
     User.find({ _id: req.params.id })
