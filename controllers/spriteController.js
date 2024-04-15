@@ -98,7 +98,7 @@ module.exports = {
     db.User.find({ _id: req.params.id }).then((dbUser) => {
       db.Sprite.findOneAndUpdate(
         { _id: dbUser[0].sprite },
-        { $set: { apiFirstJaceTalk: req.body } },
+        { $set: { apiFirstJaceTalk: false } },
         { useFindAndModify: false }
       )
         .then((dbResult) => {
@@ -111,7 +111,7 @@ module.exports = {
     db.User.find({ _id: req.params.id }).then((dbUser) => {
       db.Sprite.findOneAndUpdate(
         { _id: dbUser[0].sprite },
-        { $set: { apiFirstThiefTalk: req.body } },
+        { $set: { apiFirstThiefTalk: false } },
         { useFindAndModify: false }
       )
         .then((dbResult) => {
@@ -124,7 +124,7 @@ module.exports = {
     db.User.find({ _id: req.params.id }).then((dbUser) => {
       db.Sprite.findOneAndUpdate(
         { _id: dbUser[0].sprite },
-        { $set: { permit: req.body } },
+        { $set: { permit: true } },
         { useFindAndModify: false }
       )
         .then((dbResult) => {
