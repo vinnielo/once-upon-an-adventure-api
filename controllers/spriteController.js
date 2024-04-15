@@ -111,7 +111,7 @@ module.exports = {
     db.User.find({ _id: req.params.id }).then((dbUser) => {
       db.Sprite.findOneAndUpdate(
         { _id: dbUser[0].sprite },
-        { $set: { apiFirstThiefTalk: req.body } },
+        { $set: { apiFirstThiefTalk: false } },
         { useFindAndModify: false }
       )
         .then((dbResult) => {
