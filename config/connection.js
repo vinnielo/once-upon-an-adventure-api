@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/onceupon');
+mongoose.connect('mongodb+srv://vinnielo001:password24@cluster0.ol3bz.mongodb.net/onceupon');
 
 module.exports = mongoose.connection;
 
