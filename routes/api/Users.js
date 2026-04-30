@@ -13,10 +13,10 @@ router.route("/").get(findAll).post(create);
 
 router.route("/login").post(login);
 
-router.route("/:id").get(findUser);
-
 router.route("/avatar/story/:id?").get(findUserStory);
 
 router.route("/inventory/:id?").get(findUserInventory);
+
+router.route("/:id").get(findUser);
 
 module.exports = router;

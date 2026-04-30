@@ -21,6 +21,8 @@ module.exports = {
     res.json(user);
   },
   async login(req, res) {
+    console.log(req.body);
+
     const user = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] })
 
     if (!user) {
@@ -37,10 +39,8 @@ module.exports = {
     res.json(user);
 
   },
-  async findUser({ user = null, params }, res) {
-    const foundUser = await User.findOne({
-      $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
-    }).populate('sprite').populate("story");
+  async findUser(req, res) {
+    const foundUser = await User.findById(req.params.id).populate('sprite').populate("story");
 
     if (!foundUser) {
       return res.status(400).json({ message: 'Cannot find a user with this id!' });
@@ -49,13 +49,13 @@ module.exports = {
     res.json(foundUser);
   },
   findUserStory: function (req, res) {
-    User.find({ _id: req.params.id })
+    User.findById(req.params.id)
       .populate("story")
       .then((dbUser) => res.json(dbUser))
       .catch((err) => res.status(521).json(err));
   },
   findUserInventory: function (req, res) {
-    User.find({ _id: req.params.id })
+    User.findById(req.params.id)
       .populate("inventory")
       .then((dbUser) => res.json(dbUser))
       .catch((err) => res.status(521).json(err));
