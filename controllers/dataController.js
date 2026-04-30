@@ -23,7 +23,7 @@ module.exports = {
   async login(req, res) {
     console.log(req.body);
 
-    const user = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] })
+    const user = await User.findOne({ email: req.body.email })
 
     if (!user) {
       return res.status(400).json({ message: "Can't find this user" });
