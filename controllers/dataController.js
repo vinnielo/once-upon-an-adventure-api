@@ -1,63 +1,79 @@
 const { User } = require("../models");
-// const bcrypt = require("bcryptjs");
+const { createToken } = require("../middleware/auth");
 
-// Defining methods for the dataController
+function sanitizeUser(user) {
+  if (!user) return user;
+  const value = typeof user.toObject === "function" ? user.toObject() : { ...user };
+  delete value.password;
+  return value;
+}
+
+function sendError(res, status, code, message) {
+  return res.status(status).json({ error: { code, message } });
+}
+
 module.exports = {
-  findAll(req, res) {
-    User.find(req.query)
-      .then((dbUser) => res.json(dbUser))
-      .catch((err) => res.status(422).json(err));
+  async findAll(req, res) {
+    try {
+      const users = await User.find(req.query);
+      return res.json(users.map(sanitizeUser));
+    } catch (error) {
+      return sendError(res, 422, "USER_QUERY_FAILED", "Unable to retrieve users");
+    }
   },
 
   async create(req, res) {
-    console.log(req.body);
-    const user = await User.create(req.body);
-
-
-    if (!user) {
-      return res.status(400).json({ message: "Something is wrong!" });
+    try {
+      const user = await User.create(req.body);
+      return res.status(201).json(sanitizeUser(user));
+    } catch (error) {
+      return sendError(res, 422, "USER_CREATE_FAILED", "Unable to create user");
     }
-
-    res.json(user);
   },
+
   async login(req, res) {
-    console.log(req.body);
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user || !(await user.isCorrectPassword(req.body.password))) {
+        return sendError(res, 401, "INVALID_CREDENTIALS", "Invalid email or password");
+      }
 
-    const user = await User.findOne({ email: req.body.email })
-
-    if (!user) {
-      return res.status(400).json({ message: "Can't find this user" });
+      return res.json({ token: createToken(user), user: sanitizeUser(user) });
+    } catch (error) {
+      return sendError(res, 500, "LOGIN_FAILED", "Unable to log in");
     }
-
-
-    const correctPw = await user.isCorrectPassword(req.body.password);
-
-    if (!correctPw) {
-      return res.status(400).json({ message: "Wrong password!" });
-    }
-
-    res.json(user);
-
   },
+
   async findUser(req, res) {
-    const foundUser = await User.findById(req.params.id).populate('sprite').populate("story");
-
-    if (!foundUser) {
-      return res.status(400).json({ message: 'Cannot find a user with this id!' });
+    try {
+      const foundUser = await User.findById(req.params.id).populate("sprite").populate("story");
+      if (!foundUser) return sendError(res, 404, "USER_NOT_FOUND", "User not found");
+      return res.json(sanitizeUser(foundUser));
+    } catch (error) {
+      return sendError(res, 422, "USER_QUERY_FAILED", "Unable to retrieve user");
     }
+  },
 
-    res.json(foundUser);
+  async findUserStory(req, res) {
+    try {
+      const user = await User.findById(req.params.id).populate("story");
+      if (!user) return sendError(res, 404, "USER_NOT_FOUND", "User not found");
+      return res.json(sanitizeUser(user));
+    } catch (error) {
+      return sendError(res, 422, "STORY_QUERY_FAILED", "Unable to retrieve story");
+    }
   },
-  findUserStory: function (req, res) {
-    User.findById(req.params.id)
-      .populate("story")
-      .then((dbUser) => res.json(dbUser))
-      .catch((err) => res.status(521).json(err));
+
+  async findUserInventory(req, res) {
+    try {
+      const user = await User.findById(req.params.id).populate("inventory");
+      if (!user) return sendError(res, 404, "USER_NOT_FOUND", "User not found");
+      return res.json(sanitizeUser(user));
+    } catch (error) {
+      return sendError(res, 422, "INVENTORY_QUERY_FAILED", "Unable to retrieve inventory");
+    }
   },
-  findUserInventory: function (req, res) {
-    User.findById(req.params.id)
-      .populate("inventory")
-      .then((dbUser) => res.json(dbUser))
-      .catch((err) => res.status(521).json(err));
-  },
+
+  sanitizeUser,
+  sendError
 };

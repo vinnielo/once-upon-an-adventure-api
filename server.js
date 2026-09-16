@@ -1,23 +1,9 @@
-const express = require("express");
+require("dotenv").config();
+
 const db = require("./config/connection");
-const routes = require("./routes");
-const cors = require("cors");
+const app = require("./app");
 
 const PORT = process.env.PORT || 3001;
-const app = express();
-
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://once-upon-an-adventure-app.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(routes);
 
 db.once("open", () => {
   app.listen(PORT, () => {

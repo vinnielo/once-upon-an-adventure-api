@@ -1,12 +1,7 @@
 const router = require("express").Router();
-const inventoryController = require("../../controllers/inventoryController")
+const inventoryController = require("../../controllers/inventoryController");
+const { requireAuth, requireUserAuth } = require("../../middleware/auth");
 
-
-// // Matches with "/api/inventory"
-router.route("/:id?")
-  .get(inventoryController.findAll)
-  .post(inventoryController.create);
-
-
+router.route("/:id").post(requireAuth, requireUserAuth, inventoryController.create);
 
 module.exports = router;
