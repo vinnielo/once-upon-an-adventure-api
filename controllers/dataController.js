@@ -25,7 +25,7 @@ module.exports = {
   async create(req, res) {
     try {
       const user = await User.create(req.body);
-      return res.status(201).json(sanitizeUser(user));
+      return res.status(201).json({ token: createToken(user), user: sanitizeUser(user) });
     } catch (error) {
       return sendError(res, 422, "USER_CREATE_FAILED", "Unable to create user");
     }

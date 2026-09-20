@@ -46,6 +46,9 @@ describe("user controller", () => {
 
     await controller.create({ body: { email: "new@example.com", password: "plain-text" } }, res);
 
-    expect(res.json).toHaveBeenCalledWith({ _id: "user-2", email: "new@example.com" });
+    expect(res.status).toHaveBeenCalledWith(201);
+    const body = res.json.mock.calls[0][0];
+    expect(body.user).toEqual({ _id: "user-2", email: "new@example.com" });
+    expect(jwt.verify(body.token, "test-secret")).toMatchObject({ sub: "user-2", email: "new@example.com" });
   });
 });
